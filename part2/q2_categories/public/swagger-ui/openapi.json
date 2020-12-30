@@ -1,0 +1,408 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Packing Material API",
+    "description": "This is the OpenAPI documentation/specification for the Packing Material Service",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1",
+      "description": "development"
+    },
+    {
+      "url": "http://logistics.xpress.movex-cloud.de/packing-material-service/api/v1",
+      "description": "xpress test instance"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Packings",
+      "description": "everything about the current Packing Material"
+    },
+    {
+      "name": "Masterdata",
+      "description": "Masterdata to initialize the UI"
+    }
+  ],
+  "paths": {
+    "/packings/masterdata": {
+      "get": {
+        "tags": [
+          "Masterdata"
+        ],
+        "description": "Returns all MOVEX Regions",
+        "operationId": "regions_all",
+        "responses": {
+          "200": {
+            "description": "Regions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "companies": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "companyId": {
+                            "type": "integer"
+                          },
+                          "companyName": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "custCompanies": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "companyId": {
+                            "type": "integer"
+                          },
+                          "custCompanyId": {
+                            "type": "integer"
+                          },
+                          "custCompanyName": {
+                            "type": "string"
+                          },
+                          "custCompType": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "warehouses": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "wharehouseId": {
+                            "type": "integer"
+                          },
+                          "warehouseName": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/packings": {
+      "get": {
+        "tags": [
+          "Packings"
+        ],
+        "operationId": "getPackings",
+        "parameters": [
+          {
+            "name": "company",
+            "description": "companyId",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "custCompany",
+            "description": "custCompanyId",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "volume",
+            "description": "volume",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Packings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Packing"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Packings"
+        ],
+        "operationId": "createPacking",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PackingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Packing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Packing"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/packings/{id}": {
+      "get": {
+        "tags": [
+          "Packings"
+        ],
+        "operationId": "getPackingById",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Packings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Packing"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Packings"
+        ],
+        "operationId": "updatePacking",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PackingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Packing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Packing"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Packings"
+        ],
+        "operationId": "deletePacking",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pet not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Packing": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "packingCode": {
+            "type": "integer"
+          },
+          "company": {
+            "type": "integer"
+          },
+          "custCompany": {
+            "type": "integer"
+          },
+          "weight": {
+            "type": "integer"
+          },
+          "volume": {
+            "type": "integer"
+          },
+          "length": {
+            "type": "integer"
+          },
+          "width": {
+            "type": "integer"
+          },
+          "height": {
+            "type": "integer"
+          },
+          "qty": {
+            "type": "integer"
+          },
+          "isBag": {
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "warehouse": {
+            "type": "string",
+            "maxLength": 1
+          },
+          "usage": {
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ]
+          },
+          "opcode": {
+            "type": "string"
+          },
+          "createdDate": {
+            "type": "string"
+          },
+          "changedDate": {
+            "type": "string"
+          }
+        }
+      },
+      "PackingRequest": {
+        "type": "object",
+        "properties": {
+          "packingCode": {
+            "type": "integer"
+          },
+          "company": {
+            "type": "integer"
+          },
+          "custCompany": {
+            "type": "integer"
+          },
+          "weight": {
+            "type": "integer"
+          },
+          "volume": {
+            "type": "integer"
+          },
+          "length": {
+            "type": "integer"
+          },
+          "width": {
+            "type": "integer"
+          },
+          "height": {
+            "type": "integer"
+          },
+          "qty": {
+            "type": "integer"
+          },
+          "isBag": {
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "warehouse": {
+            "type": "string",
+            "maxLength": 1
+          },
+          "usage": {
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
